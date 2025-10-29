@@ -1,0 +1,21 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "nodejs learning",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "laila riaz",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "mongodb": "^6.20.0",
+    "mongoose": "^8.19.2",
+    "nodemon": "^3.1.9"
+  }
+}
