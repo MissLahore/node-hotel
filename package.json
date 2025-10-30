@@ -11,11 +11,14 @@
   "author": "laila riaz",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "body-parser": "^1.20.3",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.2",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
   }
 }
