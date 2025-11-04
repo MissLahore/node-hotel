@@ -1,22 +1,54 @@
 import express from "express";
 import Person from "../models/person.js";
-
+import { jwtAuthMiddleware,generateToken } from "../jwt.js";
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/signup", async (req, res) => {
   try {
     const data = req.body;
     const newPerson = new Person(data);
     const response = await newPerson.save();
+    const payload ={
+      id: response.id,
+      username: response.username
+    }
+    // console.log(json.stringify(payload));
+    const token =generateToken(payload);
     console.log("Person saved successfully");
-    res.status(200).json(response);
+    res.status(200).json({response: response ,token:token});
   } catch (err) {
     console.error("Error saving person:", err);
     res.status(500).json({ error: "Server Internal Error" });
   }
 });
 
-router.get("/", async (req, res) => {
+//login routes
+router.post('/signin',async(req,res)=>{
+  try{
+    //extract username and password from req body
+    const {username,password} = req.body;
+    //find user from db
+    const user =await Person.findOne({username:username});
+    //if user does not exist or pass does not match
+    if(!user||!( await user.comparePassword(password))){
+      return res.status(401).json({message:"Invaid username or password"});
+    }
+    //generate token
+    const payload={
+      id:user.id,
+      username:user.username
+    }
+    const token =generateToken(payload);
+    //return token as response
+    res.status(200).json({token});
+
+  }catch(err){
+    res.status(500).json({error:"Server Internal Error"});  
+
+  }
+})
+
+router.get("/",async (req, res) => {
   try {
     const data = await Person.find();
     console.log("Persons fetched successfully");
@@ -26,6 +58,21 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Server Internal Error" });
   }
 });
+router.get('/profile',jwtAuthMiddleware,async(req,res)=>{
+  try{
+    const userData = req.user;
+    console.log("userdata:",userData);
+    const userId = userData.id;
+    const user = await Person.findById(userId);
+    res.status(200).json(user);
+
+
+  }catch(err){
+    console.error("Error fetching profile:", err);
+    res.status(500).json({ error: "Server Internal Error" });
+
+  }
+})
 
 router.get("/:workType", async (req, res) => {
   try {

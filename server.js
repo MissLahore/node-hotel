@@ -6,6 +6,7 @@ import menuRoutes from './routes/menuRoutes.js';
 import passport from './auth.js';
 
 const app = express();
+app.use(bodyParser.json()); // Parse JSON request bodies
 
 // ✅ Middleware
 
@@ -23,10 +24,9 @@ app.post('/login',localAuthMiddleware,(req,res)=>{
   res.json({message:'Login Successful', user:req.user});
 });
 
-app.use(bodyParser.json()); // Parse JSON request bodies
 
 // ✅ Person routes (mounted under /person)
-app.use('/person',localAuthMiddleware, personRoutes);
+app.use('/person', personRoutes);
 app.use('/menu',menuRoutes);
 
 
